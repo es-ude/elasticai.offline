@@ -1,6 +1,8 @@
 import unittest
 
 import numpy as np
+from hypothesis import given
+from hypothesis import strategies as st
 
 from elasticai.offline.metric.electrical import (
     calculate_cosine_similarity,
@@ -50,7 +52,8 @@ class TestElectricalMetric(unittest.TestCase):
             y_pred=np.sin(2 * np.pi * 50 * t),
             y_true=np.sin(2 * np.pi * 50 * t),
         )
-        self.assertEqual(rslt, 1.0)
+        # float rounding in dot/norm depends on BLAS/CPU, so no exact comparison
+        self.assertAlmostEqual(rslt, 1.0, delta=1e-12)
 
     def test_calculate_cosine_half(self):
         t = np.linspace(0, 1, 1000, endpoint=True)
@@ -60,25 +63,29 @@ class TestElectricalMetric(unittest.TestCase):
         )
         self.assertAlmostEqual(rslt, -4.3151246464923076e-17, delta=1e-12)
 
-    def test_calculate_sinad_from_transient(self):
+    @given(seed=st.integers(min_value=0, max_value=2**32 - 1))
+    def test_calculate_sinad_from_transient(self, seed: int):
         t = np.linspace(0, 1, 1000, endpoint=True)
         signal = 3.3 * np.sin(2 * np.pi * 100 * t)
-        noise = np.random.normal(0, 0.01, size=t.shape)
+        noise = np.random.default_rng(seed).normal(0, 0.01, size=t.shape)
         distortion = 0.02 * np.sin(2 * np.pi * 3 * 200 * t)
         rslt = calculate_sinad_from_transient(
             signal=signal + noise + distortion, fs=1 / t[1], num_harmonics=1
         )
-        self.assertAlmostEqual(rslt, 39.2945, delta=1e-1)
+        # noise power of 1000 samples scatters by ~4.5 % (~0.2 dB, 1 sigma)
+        self.assertAlmostEqual(rslt, 39.2945, delta=1.0)
 
-    def test_calculate_enob_from_transient(self):
+    @given(seed=st.integers(min_value=0, max_value=2**32 - 1))
+    def test_calculate_enob_from_transient(self, seed: int):
         t = np.linspace(0, 1, 1000, endpoint=True)
         signal = 3.3 * np.sin(2 * np.pi * 100 * t)
-        noise = np.random.normal(0, 0.01, size=t.shape)
+        noise = np.random.default_rng(seed).normal(0, 0.01, size=t.shape)
         distortion = 0.02 * np.sin(2 * np.pi * 3 * 200 * t)
         rslt = calculate_enob_from_transient(
             signal=signal + noise + distortion, fs=1 / t[1], num_harmonics=1
         )
-        self.assertAlmostEqual(rslt, 6.219554008131976, delta=5e-2)
+        # 1 sigma ~0.03 bit (see SINAD test)
+        self.assertAlmostEqual(rslt, 6.219554008131976, delta=0.2)
 
 
 if __name__ == "__main__":

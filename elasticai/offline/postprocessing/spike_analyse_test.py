@@ -14,6 +14,8 @@ from .spike_analyse import (
     calc_spike_ticks,
 )
 
+MIN_GAP = 1.8e-3  # [s] minimum gap between generated spikes
+
 
 def _build_eap_dataset(
     count: int, sampling_rate: float, max_gap: float = 0.01, do_plot: bool = False
@@ -32,13 +34,15 @@ def _build_eap_dataset(
         np.array(
             dut.build_random_timestamps(
                 count=2 * count,
-                min_gap=1.8e-3,
+                min_gap=MIN_GAP,
                 max_gap=max_gap,
             )
         )
         * sampling_rate
     )
-    wvf_noise = np.tile(wvf, (2 * count, 1)) + 8e-6 * np.random.randn(2 * count, wvf.size)
+    wvf_noise = np.tile(wvf, (2 * count, 1)) + 8e-6 * np.random.default_rng(42).standard_normal(
+        (2 * count, wvf.size)
+    )
     wvf_noise[count:] = (-1) * wvf_noise[count:]
     label = np.zeros((2 * count,), dtype=int)
     label[count:] = label[count:] + 1
@@ -62,6 +66,7 @@ class SpikeAnalysisTest(unittest.TestCase):
 
     def setUp(self):
         self.fs = 20e3
+        np.random.seed(42)  # build_random_timestamps uses the global numpy RNG
         self.dataset = _build_eap_dataset(count=12, sampling_rate=self.fs, max_gap=0.1, do_plot=False)
 
     def test_build_dataset(self):
@@ -97,7 +102,8 @@ class SpikeAnalysisTest(unittest.TestCase):
         self.assertEqual(rslt[1].shape, (2, 12))
         self.assertEqual(rslt[1][1, :].min(), 0.0)
         self.assertGreater(rslt[1][1, :].max(), 0.0)
-        self.assertLessEqual(rslt[1][1, :].max(), 300)
+        # min. gap of generated spikes is 1.8 ms (-1 sample due to int cast of positions)
+        self.assertLessEqual(rslt[1][1, :].max(), self.fs / (MIN_GAP * self.fs - 1))
 
     def test_calc_interval_timing(self):
         ticks = calc_spike_ticks(spike=self.dataset)
@@ -105,7 +111,7 @@ class SpikeAnalysisTest(unittest.TestCase):
         self.assertEqual(len(rslt), 2)
         self.assertEqual(rslt[0].shape, (11,))
         self.assertEqual(rslt[1].shape, (11,))
-        self.assertGreaterEqual(rslt[1].min(), 2e-3)
+        self.assertGreaterEqual(rslt[1].min(), MIN_GAP - 1 / self.fs)
 
 
 if __name__ == "__main__":

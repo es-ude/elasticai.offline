@@ -47,7 +47,7 @@ class TestAnalogFunc(TestCase):
 class TestDigitalFunc(TestCase):
     method = CommonDigitalFunctions()
     input_clip = np.linspace(start=-3.0, stop=3.0, num=11, endpoint=True)
-    input_quant = np.random.random(size=(10, 2))
+    input_quant = np.random.default_rng(42).random(size=(10, 2))
 
     def test_range_unsigned_2_0(self):
         range_val = self.method.define_limits(bit_signed=False, total_bitwidth=2, frac_bitwidth=0)

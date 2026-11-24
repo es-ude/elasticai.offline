@@ -13,7 +13,7 @@ def dummy_func(data: np.ndarray) -> dict:
 @pytest.mark.slow
 class MultiThreadingTest(unittest.TestCase):
     num_channels = 16
-    data = np.random.random((num_channels, 100)) - 0.5
+    data = np.random.default_rng(42).random((num_channels, 100)) - 0.5
     chnl = np.linspace(start=0, stop=num_channels, num=num_channels, endpoint=False, dtype=int).tolist()
 
     def test_single_core(self):

@@ -4,6 +4,8 @@ import numpy as np
 
 from .downsampler import augmentation_downsampling
 
+_RNG = np.random.default_rng(42)
+
 
 def build_random_dataset_labeled(
     n_ch: int = 2, n_label: int = 4, n_samples: int = 1000, n_window=10000
@@ -14,8 +16,8 @@ def build_random_dataset_labeled(
     else:
         data = np.zeros((n_samples, n_window))
 
-    data[..., :] = np.sin(time0) + 0.01 * np.random.randn(*data.shape)
-    label = np.random.randint(low=0, high=n_label, size=(n_samples,))
+    data[..., :] = np.sin(time0) + 0.01 * _RNG.standard_normal(data.shape)
+    label = _RNG.integers(low=0, high=n_label, size=(n_samples,))
     return data, label
 
 

@@ -15,7 +15,7 @@ TestSettings = SettingsCellSelector(
 # --- Info: Function have to start with test_*
 class TestCellSelector(TestCase):
     label_old = np.array([0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5], dtype=int)
-    data_old = np.random.randn(label_old.shape[0], 100)
+    data_old = np.random.default_rng(42).standard_normal((label_old.shape[0], 100))
 
     def test_cell_merge_get_id_from_name_mode0(self):
         rslt = CellSelector(TestSettings, 0).get_id_from_key("One")

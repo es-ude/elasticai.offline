@@ -1,6 +1,8 @@
 from os.path import exists, join, splitext
 from unittest import TestCase, main
 
+import pytest
+
 from elasticai.offline import get_path_to_project
 from elasticai.offline.data_call.owncloud_handler import ConfigCloud, OwnCloudDownloader
 
@@ -11,6 +13,7 @@ TestConfigCloud = ConfigCloud(
 )
 
 
+@pytest.mark.slow  # real network access to sciebo
 class TestOwnCloud(TestCase):
     path2temp = get_path_to_project(new_folder="temp_test")
     handler = OwnCloudDownloader(path2config=path2temp, use_config=TestConfigCloud)

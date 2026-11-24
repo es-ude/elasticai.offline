@@ -57,6 +57,7 @@ docs = [
   "sphinxext-opengraph>=0.9.1",
 ]
 test = [
+  "hypothesis>=6.100.0",
   "pytest>=9.0.3",
   "pytest-rerunfailures>=16.3",
   "pytest-testmon>=2.2.0",

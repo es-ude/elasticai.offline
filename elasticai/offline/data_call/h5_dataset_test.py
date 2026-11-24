@@ -1,10 +1,11 @@
 from pathlib import Path
-from random import randint
 from shutil import rmtree
 
 import h5py
 import numpy as np
 import pytest
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from elasticai.offline import get_path_to_project
 
@@ -73,10 +74,12 @@ def test_label_collecting_integer():
 
 
 @pytest.mark.parametrize("n_chunks", [1, 8, 16, 512])
-def test_h5_data_collection_integer(path: Path, n_chunks: int):
+@settings(max_examples=3)
+@given(seed=st.integers(min_value=0, max_value=2**32 - 1))
+def test_h5_data_collection_integer(path: Path, n_chunks: int, seed: int):
     path2file = path / f"test_data_int_{n_chunks:02d}.h5"
-
-    data_in = [randint(a=-100, b=100) for _ in range(num_samples)]
+    rng = np.random.default_rng(seed)
+    data_in = rng.integers(-100, 101, size=num_samples).tolist()
 
     with h5py.File(path2file, "w") as h5f:
         dut = CollectorH5(h5f, name="data", chunks=n_chunks)
@@ -119,10 +122,12 @@ def test_h5_data_collection_string(path: Path, n_chunks: int):
 
 
 @pytest.mark.parametrize("n_chunks", [1, 8, 16, 512])
-def test_h5_data_collection_list(path: Path, n_chunks: int):
+@settings(max_examples=3)
+@given(seed=st.integers(min_value=0, max_value=2**32 - 1))
+def test_h5_data_collection_list(path: Path, n_chunks: int, seed: int):
     path2file = path / f"test_data_list_{n_chunks:02d}.h5"
-
-    data_in = [[randint(a=-10, b=10) for _ in range(10)] for _ in range(num_samples)]
+    rng = np.random.default_rng(seed)
+    data_in = rng.integers(-10, 11, size=(num_samples, 10)).tolist()
 
     with h5py.File(path2file, "w") as h5f:
         dut = CollectorH5(h5f, name="data", chunks=n_chunks)
@@ -140,10 +145,12 @@ def test_h5_data_collection_list(path: Path, n_chunks: int):
 
 
 @pytest.mark.parametrize("n_chunks", [1, 8, 16, 512])
-def test_h5_data_collection_numpy(path: Path, n_chunks: int):
+@settings(max_examples=3)
+@given(seed=st.integers(min_value=0, max_value=2**32 - 1))
+def test_h5_data_collection_numpy(path: Path, n_chunks: int, seed: int):
     path2file = path / f"test_data_numpy_{n_chunks:02d}.h5"
-
-    data_in = [[randint(a=-128, b=127) for _ in range(10)] for _ in range(num_samples)]
+    rng = np.random.default_rng(seed)
+    data_in = rng.integers(-128, 128, size=(num_samples, 10)).tolist()
 
     with h5py.File(path2file, "w") as h5f:
         dut = CollectorH5(h5f, name="data", chunks=n_chunks)

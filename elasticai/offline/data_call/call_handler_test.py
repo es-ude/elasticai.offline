@@ -38,7 +38,7 @@ class TestCallHandler(TestCase):
         settings.data_set = "test_args"
 
         dut = DataLoaderTest(settings=settings)
-        stimulus = np.random.randn(250)
+        stimulus = np.random.default_rng(42).standard_normal(250)
         fs = 250.0
         dut.do_call(fs, stimulus)
         data0 = dut.get_data()
