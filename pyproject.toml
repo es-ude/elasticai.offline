@@ -187,6 +187,6 @@ override-dependencies = ["triton; sys_platform == 'never'"]
 
 [tool.uv.sources]
 elasticai-creator = { git = "https://github.com/es-ude/elastic-ai.creator.git", branch = "main" }
-elasticai-explorer = { git = "https://github.com/es-ude/elastic-ai.explorer.git", branch = "add-grid-search" }
+elasticai-explorer = { git = "https://github.com/es-ude/elastic-ai.explorer.git", branch = "main" }
 elasticai-preprocessor = { git = "https://github.com/es-ude/elasticai.preprocessor.git", branch = "main" }
 soundcard = { git = "https://github.com/bastibe/SoundCard.git" }
