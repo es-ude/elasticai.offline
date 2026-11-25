@@ -1,7 +1,7 @@
 ### Project ###
 .python-version
 docs/apidocs
-denspp/__init__.py
+elasticai/__init__.py
 **/Config_*.yaml
 **/Config_*.json
 **/.devenv
@@ -9,9 +9,8 @@ denspp/__init__.py
 **/data
 **/dataset
 **/runs
-**/run_*.py
+run_*.py
 **/temp_*
-elasticai/__init__.py
 elasticai/creator_plugins/__init__.py
 
 #macos
@@ -23,8 +22,6 @@ elasticai/creator_plugins/__init__.py
 
 # Just for not uploading new features/files into main folder (just for local development)
 **/src_*
-main_*.py
-run_*.py
 **/access_cloud.json
 
 
