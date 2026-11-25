@@ -2,6 +2,7 @@ from copy import deepcopy
 from logging import Logger, getLogger
 
 import numpy as np
+from elasticai.preprocessor.normalization import DataNormalization, DataNormalizationSettings
 
 from elasticai.offline.data_augmentation import (
     augmentation_changing_position,
@@ -13,7 +14,6 @@ from elasticai.offline.data_call.call_cellbib import CellSelector
 from elasticai.offline.dnn import DatasetFromFile, SettingsDataset
 from elasticai.offline.dnn.model_library import CellLibrary
 from elasticai.offline.metric import calculate_snr_cluster
-from elasticai.offline.preprocessing import DataNormalization, DataNormalizationSettings
 
 
 class DataProcessor:

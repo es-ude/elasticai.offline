@@ -1,6 +1,9 @@
 from os.path import abspath
 
 import numpy as np
+from elasticai.preprocessor import DataTransient, DataWaveform
+from elasticai.preprocessor.filter import Filtering, FilterSettings
+from elasticai.preprocessor.sda import SDASettings, SpikeDetection
 
 from elasticai.offline.analog.adc import SettingsADC
 from elasticai.offline.analog.adc import SuccessiveApproximation as ADC0
@@ -13,14 +16,6 @@ from elasticai.offline.ml import (
 )
 from elasticai.offline.pipeline import PipelineCMD
 from elasticai.offline.postprocessing import calc_spike_ticks
-from elasticai.offline.preprocessing import (
-    DataTransient,
-    DataWaveform,
-    Filtering,
-    FilterSettings,
-    SDASettings,
-    SpikeDetection,
-)
 
 
 class SettingsPipe:

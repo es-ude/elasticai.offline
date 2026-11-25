@@ -1,7 +1,7 @@
 import numpy as np
+from elasticai.preprocessor.downsampling import DownSampling, DownSamplingSettings
 
 from elasticai.offline.analog.dev_noise import ProcessNoise
-from elasticai.offline.preprocessing import DownSampling, DownSamplingSettings
 
 from .adc_basic import BasicADC
 from .adc_settings import (

@@ -4,7 +4,7 @@ import matplotlib.ticker as mticker
 from pathlib import Path
 from elasticai.offline import get_path_to_project
 from elasticai.offline.plot_helper import save_figure, get_plot_color, get_textsize_paper
-from elasticai.offline.preprocessing import FilterSettings, Filtering
+from elasticai.preprocessor.filter import Filtering, FilterSettings
 
 
 def plot_filter_coeffs(coeffs: list, fsweep: np.ndarray, path2save: Path=Path("."), block_plot:bool=False) -> None:

@@ -7,9 +7,9 @@ from unittest.mock import Mock, patch
 
 import h5py
 import numpy as np
+from elasticai.preprocessor import DataWaveform
 
 from elasticai.offline.data_call.merge_datasets import MergeDataset
-from elasticai.offline.preprocessing import DataWaveform
 
 
 class MergeDatasetTest(unittest.TestCase):

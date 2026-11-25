@@ -1,6 +1,7 @@
 import unittest
 
 import numpy as np
+from elasticai.preprocessor.transformation import do_fft
 from hypothesis import given
 from hypothesis import strategies as st
 
@@ -11,7 +12,6 @@ from elasticai.offline.metric.electrical import (
     calculate_total_harmonics_distortion,
     calculate_total_harmonics_distortion_from_transient,
 )
-from elasticai.offline.preprocessing import do_fft
 
 
 class TestElectricalMetric(unittest.TestCase):
